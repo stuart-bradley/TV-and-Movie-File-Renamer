@@ -5,12 +5,19 @@ Stuart Bradley
 """
 
 import os
-import glob
 import re
+
+test_loc = "/home/stuart/Code/Renamer/Test Structure"
 
 files_to_change = '*.avi' 
 
-for f in glob.glob(files_to_change):
+for root, dirnames, filenames in os.walk(test_loc):
+	print root
+	print dirnames
+	print filenames
+
+"""
+for f in glob2.glob(test_loc + '/**/*'):
 		if re.search('S\d+E\d+', f):
 			print 'Already in S##E## format - Skipping'
 			continue
@@ -22,5 +29,4 @@ for f in glob.glob(files_to_change):
         	print 'renaming: ', f, ' -> ', f2
         	os.rename(f, f2) 
 print 'All Done' 
- 
- 
+"""
