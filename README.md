@@ -20,11 +20,19 @@ The script assumes the following file structure:
 
 It uses this structure to correctly rename both the TV shows, and the movies.
 
+The script itself should be run in the folder with both `TV Shows` and `Movies`. However, if this not possible, the `loc` variable on line 12 can be changed to point the script to the right directory. 
+
 ### TV Shows
 
 When renaming TV shows, the script grabs the `title` from the parent folder. However it grabs the the season and episode information directly from the file. It can also handle this multi-episode format:
 
 `TV Show Name - S##E##E##E##`
+
+In regards to folder nesting, files inside single directories, will get moved to the parent (season) directory, before file renaming occurs:
+
+```
+\TV Shows\TV Show Name\Season ##\Episode Folder\Episode.*** -> \TV Shows\TV Show Name\Season ##\Episode.***
+```
 
 ### Movies
 

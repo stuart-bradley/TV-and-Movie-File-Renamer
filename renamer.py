@@ -9,8 +9,7 @@ import re
 import shutil
 import stat
 
-test_loc = os.path.join(os.path.dirname(os.path.realpath(__file__)), "Test_Structure").replace("\\","/")
-test_loc_copy = os.path.join(os.path.dirname(os.path.realpath(__file__)), "Test_Structure_copy").replace("\\","/")
+loc = os.path.dirname(os.path.realpath(__file__)).replace("\\","/")
 
 files_to_change = ['.avi', '.mp4', '.mkv', '.srt'] 
 
@@ -32,16 +31,19 @@ def change_seasons(dirnames, root):
 		season_num = next(s for s in matchObj.groups() if s).lstrip('0')
 		os.rename(os.path.join(root, d).replace("\\","/"), os.path.join(root, "Season " + season_num).replace("\\","/"))
 
+# Takes videos out of single folders, and places them in root directory.
+def destroy_single_folders(dirnames, root):
+	for d in dirnames:
+		single_folder_root = os.path.join(root, d)
+		for filename in os.listdir(single_folder_root):
+			shutil.move(os.path.join(single_folder_root, filename), os.path.join(root, filename))
+		os.rmdir(single_folder_root)
+
 ########
 # MAIN #
 ########
 
-# Make a Copy of Test Structure
-#shutil.copytree(test_loc, test_loc_copy)
-#shutil.rmtree(test_loc)
-#os.rename(test_loc_copy, test_loc)
-
-for root, dirnames, filenames in os.walk(test_loc):
+for root, dirnames, filenames in os.walk(loc):
 	# Set Root for WIN.
 	root = root.replace("\\","/")
 	# Determine main directory.
@@ -53,13 +55,18 @@ for root, dirnames, filenames in os.walk(test_loc):
 	if mode is "TV":
 		# Check if in TV shows, and if inside a specific TV show. 
 		matchObj = re.search("TV Shows\/([\w ]+$)",root)
+		# Folder Structure.
+		# Check if we're at Season level, and there are not files present.
 		if not filenames and matchObj:
 			# Set current Title.
 			title = matchObj.group(1)
 			# Set Season folder names.
 			change_seasons(dirnames, root)
+		# No video files, and Non-season directories visible, and directories contain S##E##.
+		elif not any(x.endswith(tuple(files_to_change)) for x in filenames) and not any(re.search("Season \d+", x, re.IGNORECASE) for x in dirnames) and any(re.search("S\d+(?:E\d+)+", x, re.IGNORECASE) for x in dirnames):
+			destroy_single_folders(dirnames, root)
 		# If inside a season (video files are present).
-		if any(x.endswith(tuple(files_to_change)) for x in filenames):
+		elif any(x.endswith(tuple(files_to_change)) for x in filenames):
 			for f1 in filenames:
 				# Video is correctly named.
 				if re.search(" - S\d+(?:E\d+)+",f1):
