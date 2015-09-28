@@ -4,15 +4,19 @@ This is a simple script designed to recursively rename movies and TV shows. It a
 
 The files are renamed in the following formats:
 
-`TV Show Name - S##E##`
-`Movie (Year)`
+```
+TV Show Name - S##E##
+Movie (Year)
+```
 
 ## File Structure
 
 The script assumes the following file structure:
 
-`\TV Shows\TV Show Name\Season ##\Episode.***`
-`\Movies\Movie Name (Year)\Movie.***`
+```
+\TV Shows\TV Show Name\Season ##\Episode.***
+\Movies\Movie Name (Year)\Movie.***
+```
 
 It uses this structure to correctly rename both the TV shows, and the movies.
 
