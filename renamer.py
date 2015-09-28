@@ -62,7 +62,7 @@ for root, dirnames, filenames in os.walk(test_loc):
 		if any(x.endswith(tuple(files_to_change)) for x in filenames):
 			for f1 in filenames:
 				# Video is correctly named.
-				if re.search("% - S\d+(?:E\d+)+" % title,f1):
+				if re.search(" - S\d+(?:E\d+)+",f1):
 					continue
 				# Rename video, and subtitles.
 				elif f1.endswith(tuple(files_to_change)):
