@@ -12,7 +12,7 @@ import stat
 test_loc = os.path.join(os.path.dirname(os.path.realpath(__file__)), "Test_Structure").replace("\\","/")
 test_loc_copy = os.path.join(os.path.dirname(os.path.realpath(__file__)), "Test_Structure_copy").replace("\\","/")
 
-files_to_change = ['.avi', '.mp4', '.mkv'] 
+files_to_change = ['.avi', '.mp4', '.mkv', '.srt'] 
 
 mode = ''
 
@@ -60,7 +60,18 @@ for root, dirnames, filenames in os.walk(test_loc):
 			change_seasons(dirnames, root)
 		# If inside a season (video files are present).
 		if any(x.endswith(tuple(files_to_change)) for x in filenames):
-			continue
+			for f1 in filenames:
+				# Video is correctly named.
+				if re.search("% - S\d+(?:E\d+)+" % title,f1):
+					continue
+				# Rename video, and subtitles.
+				elif f1.endswith(tuple(files_to_change)):
+					season_ep = re.search("(S\d+(?:E\d+)+)",f1).group(1)
+					ext = f1.split(".")[-1]
+					os.rename(os.path.join(root, f1).replace("\\","/"), os.path.join(root, (title +  " - " + season_ep + "." +ext)).replace("\\","/"))
+				# Trash.
+				else:
+					os.remove(os.path.join(root, f1).replace("\\","/"))	
 	elif mode is "Mo":
 		if any(x.endswith(tuple(files_to_change)) for x in filenames):
 			title = re.search("Movies\/([\w ]+\(\d{4}\)$)",root).group(1)
@@ -68,13 +79,10 @@ for root, dirnames, filenames in os.walk(test_loc):
 				# Video is correctly named.
 				if re.search("[\w ]+\(\d{4}\).\w+$",f1):
 					continue
-				# Rename video.
+				# Rename video, and subtitles.
 				elif f1.endswith(tuple(files_to_change)):
 					ext = f1.split(".")[-1]
 					os.rename(os.path.join(root, f1).replace("\\","/"), os.path.join(root, (title + "." +ext)).replace("\\","/"))
-				# Subtitles
-				elif f1.endswith(".srt"):
-					continue
 				# Trash.
 				else:
 					os.remove(os.path.join(root, f1).replace("\\","/"))
