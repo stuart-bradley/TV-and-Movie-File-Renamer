@@ -36,8 +36,9 @@ def destroy_single_folders(dirnames, root):
 	for d in dirnames:
 		single_folder_root = os.path.join(root, d)
 		for filename in os.listdir(single_folder_root):
-			shutil.move(os.path.join(single_folder_root, filename), os.path.join(root, filename))
-		os.rmdir(single_folder_root)
+			if filename.endswith(tuple(files_to_change)) and "sample" not in filename.lower():
+				shutil.move(os.path.join(single_folder_root, filename), os.path.join(root, filename))
+		shutil.rmtree(single_folder_root)
 
 ########
 # MAIN #
