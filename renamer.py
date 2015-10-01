@@ -74,18 +74,19 @@ for root, dirnames, filenames in os.walk(loc):
 					continue
 				# Rename video, and subtitles.
 				elif f1.endswith(tuple(files_to_change)):
-					season_ep = re.search("(S\d+(?:E\d+)+)",f1).group(1)
+					season_ep = re.search("(S\d+[ ]*(?:E\d+)+)",f1).group(1).replace(" ", "")
 					ext = f1.split(".")[-1]
 					os.rename(os.path.join(root, f1).replace("\\","/"), os.path.join(root, (title +  " - " + season_ep + "." +ext)).replace("\\","/"))
 				# Trash.
 				else:
 					os.remove(os.path.join(root, f1).replace("\\","/"))	
 	elif mode is "Mo":
+		root = root.replace("\\","/")
 		if any(x.endswith(tuple(files_to_change)) for x in filenames):
-			title = re.search("Movies\/([\w ]+\(\d{4}\)$)",root).group(1)
+			title = re.search("Movies\/([\w\- ]+\(\d{4}\))",root).group(1)
 			for f1 in filenames:
 				# Video is correctly named.
-				if re.search("[\w ]+\(\d{4}\).\w+$",f1):
+				if re.search("[\w ]+\(\d{4}\).\w+",f1):
 					continue
 				# Rename video, and subtitles.
 				elif f1.endswith(tuple(files_to_change)):
@@ -94,3 +95,6 @@ for root, dirnames, filenames in os.walk(loc):
 				# Trash.
 				else:
 					os.remove(os.path.join(root, f1).replace("\\","/"))
+			print root
+			main_root = re.search(r"(.+/)[^/]+$", root).group(1)
+			os.rename(root, os.path.join(main_root, title).replace("\\","/"))
