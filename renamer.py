@@ -74,7 +74,7 @@ for root, dirnames, filenames in os.walk(loc):
 					continue
 				# Rename video, and subtitles.
 				elif f1.endswith(tuple(files_to_change)):
-					season_ep = re.search("(S\d+[ ]*(?:E\d+)+)",f1).group(1).replace(" ", "")
+					season_ep = re.search("([Ss]\d+[ ]*(?:[Ee]\d+)+)",f1).group(1).replace(" ", "").upper()
 					ext = f1.split(".")[-1]
 					os.rename(os.path.join(root, f1).replace("\\","/"), os.path.join(root, (title +  " - " + season_ep + "." +ext)).replace("\\","/"))
 				# Trash.
