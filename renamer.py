@@ -63,8 +63,8 @@ for root, dirnames, filenames in os.walk(loc):
 			title = matchObj.group(1)
 			# Set Season folder names.
 			change_seasons(dirnames, root)
-		# No video files, and Non-season directories visible, and directories contain S##E##.
-		elif not any(x.endswith(tuple(files_to_change)) for x in filenames) and not any(re.search("Season \d+", x, re.IGNORECASE) for x in dirnames) and any(re.search("S\d+(?:E\d+)+", x, re.IGNORECASE) for x in dirnames):
+		# Non-season directories visible, and directories contain S##E##.
+		elif not any(re.search("Season \d+", x, re.IGNORECASE) for x in dirnames) and any(re.search("S\d+(?:E\d+)+", x, re.IGNORECASE) for x in dirnames):
 			destroy_single_folders(dirnames, root)
 		# If inside a season (video files are present).
 		elif any(x.endswith(tuple(files_to_change)) for x in filenames):
